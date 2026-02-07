@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will you be my Valentine? 💖</title>
+
+<style>
+:root {
+  --pink: #ff4d88;
+  --bg: #ffe6f0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: radial-gradient(circle at top, #cb6f8e, var(--bg));
+  overflow: hidden;
+}
+
+.valentine-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.box {
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 25px;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+button {
+  padding: 12px 28px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+#yes {
+  background: linear-gradient(135deg, #ff4d88, #ff85a2);
+  color: white;
+}
+
+#no {
+  background: #444;
+  color: white;
+}
+
+.heart-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.heart {
+  position: absolute;
+  top: -10vh;
+  color: var(--pink);
+  animation: fall 6s linear forwards, sway 3s ease-in-out infinite;
+}
+
+@keyframes fall {
+  from { top: -10vh; opacity: 1; }
+  to { top: 120vh; opacity: 0; }
+}
+
+@keyframes sway {
+  0%,100% { transform: translateX(0); }
+  50% { transform: translateX(30px); }
+}
+
+.success {
+  animation: pop 0.8s ease forwards;
+}
+
+.glass-card {
+  padding: 42px 54px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  box-shadow:
+    0 25px 70px rgba(255, 77, 136, 0.4),
+    inset 0 0 0 1px rgba(255,255,255,0.45);
+}
+
+.glass-card h1 {
+  font-size: 48px;
+  color: var(--pink);
+  text-shadow: 0 0 25px rgba(255,77,136,0.45);
+  margin-bottom: 12px;
+}
+
+.glass-card h2 {
+  font-size: 26px;
+  margin: 12px 0;
+}
+
+.glass-card p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="heart-layer" id="heartLayer"></div>
+
+<div class="valentine-container">
+  <div class="box" id="mainBox">
+    <h1>Will you be my Valentine?🥺👉👈</h1>
+    <div class="btn-group">
+      <button id="yes">Yes</button>
+      <button id="no">No</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const heartLayer = document.getElementById("heartLayer");
+
+let offsetX = 0;
+let offsetY = 0;
+const SAFE_DISTANCE = 120;
+
+document.addEventListener("mousemove", e => {
+  const rect = noBtn.getBoundingClientRect();
+  const dx = e.clientX - (rect.left + rect.width / 2);
+  const dy = e.clientY - (rect.top + rect.height / 2);
+  const distance = Math.hypot(dx, dy);
+
+  if (distance < SAFE_DISTANCE) {
+    const angle = Math.atan2(dy, dx);
+    offsetX -= Math.cos(angle) * 40;
+    offsetY -= Math.sin(angle) * 40;
+    offsetX = Math.max(-300, Math.min(300, offsetX));
+    offsetY = Math.max(-200, Math.min(200, offsetY));
+    noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+  }
+});
+
+yesBtn.addEventListener("click", () => {
+  document.getElementById("mainBox").innerHTML = `
+    <div class="success">
+      <div class="glass-card">
+        <h1>🎉 Yay! 🎉</h1>
+        <h2>You are officially my Valentine 💕</h2>
+        <p>This made my day 😊</p>
+      </div>
+    </div>
+  `;
+  startHearts();
+});
+
+function startHearts() {
+  const interval = setInterval(createHeart, 140);
+  setTimeout(() => clearInterval(interval), 9000);
+}
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random() * 16 + 18 + "px";
+  heartLayer.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}
+</script>
+
+</body>
+</html>
